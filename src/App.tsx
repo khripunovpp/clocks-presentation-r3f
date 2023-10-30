@@ -1,22 +1,9 @@
-import {Canvas, useFrame, context} from "@react-three/fiber";
+import {Canvas} from "@react-three/fiber";
 import './App.scss';
-import {
-  AccumulativeShadows,
-  Center,
-  Environment,
-  Lightformer,
-  OrbitControls,
-  RandomizedLight,
-  ScrollControls,
-  useScroll
-} from "@react-three/drei";
+import {Center, Environment, Lightformer, OrbitControls, ScrollControls, Stats} from "@react-three/drei";
 import {Clocks} from "./Clocks.tsx";
-import {useLayoutEffect, useRef} from "react";
+import {useRef} from "react";
 import * as THREE from "three";
-import gsap from "gsap";
-
-const VIEWPORT_HEIGHT = 2.3;
-const SECTIONS_COUNT = 3;
 
 
 function App() {
@@ -24,7 +11,11 @@ function App() {
     <Canvas shadows>
       <color attach="background" args={['#78a4b0']}/>
       <directionalLight position={[4, 7, 2]} intensity={3}/>
-      <axesHelper/>
+      <axesHelper args={[5]}/>
+      <gridHelper/>
+      // y axis grid
+      <gridHelper rotation-x={Math.PI / 2} position-y={0}/>
+      <Stats/>
 
       <ScrollControls pages={3}>
 
@@ -65,26 +56,7 @@ function App() {
 
 function CameraRig({children}) {
   const groupRef = useRef<THREE.Group>();
-  const tlRef = useRef<gsap.core.Timeline>();
 
-  const scroll = useScroll();
-
-  useFrame(() => {
-    const seek = scroll.offset * tlRef.current!.duration();
-    tlRef.current?.seek(seek);
-  });
-
-  useLayoutEffect(() => {
-    console.log('useLayoutEffect', {
-      pos:groupRef.current!.position,
-      y: VIEWPORT_HEIGHT * (SECTIONS_COUNT - 1),
-    })
-    tlRef.current = gsap.timeline();
-    tlRef.current.to(groupRef.current!.position, {
-      y: VIEWPORT_HEIGHT * (SECTIONS_COUNT - 1),
-      duration: 2,
-    },0)
-  }, []);
   // useFrame((state, delta) => {
   //   // @ts-ignore
   //   // easing.dampE(group.current.rotation, [0, -state.pointer.x / 4, 0], 0.25, delta)
