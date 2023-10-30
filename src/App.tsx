@@ -1,4 +1,4 @@
-import {Canvas, useFrame} from "@react-three/fiber";
+import {Canvas, useFrame, context} from "@react-three/fiber";
 import './App.scss';
 import {
   AccumulativeShadows,
@@ -7,10 +7,17 @@ import {
   Lightformer,
   OrbitControls,
   RandomizedLight,
-  ScrollControls
+  ScrollControls,
+  useScroll
 } from "@react-three/drei";
 import {Clocks} from "./Clocks.tsx";
-import {useRef} from "react";
+import {useLayoutEffect, useRef} from "react";
+import * as THREE from "three";
+import gsap from "gsap";
+
+const VIEWPORT_HEIGHT = 2.3;
+const SECTIONS_COUNT = 3;
+
 
 function App() {
   return (
@@ -27,23 +34,23 @@ function App() {
               <Clocks/>
             </Center>
 
-            <OrbitControls maxPolarAngle={Math.PI / 2}/>
+            <OrbitControls maxPolarAngle={Math.PI / 2} enableZoom={false}/>
 
-            <AccumulativeShadows temporal
-                                 frames={100}
-                                 color={'#78a4b0'}
-                                 colorBlend={1}
-                                 toneMapped={true}
-                                 alphaTest={0.75}
-                                 opacity={2}
-                                 scale={15}>
-              <RandomizedLight intensity={Math.PI}
-                               amount={10}
-                               radius={7}
-                               ambient={0.5}
-                               position={[-10, 10, 10]}
-                               bias={0.001}/>
-            </AccumulativeShadows>
+            {/*<AccumulativeShadows temporal*/}
+            {/*                     frames={100}*/}
+            {/*                     color={'#78a4b0'}*/}
+            {/*                     colorBlend={1}*/}
+            {/*                     toneMapped={true}*/}
+            {/*                     alphaTest={0.75}*/}
+            {/*                     opacity={2}*/}
+            {/*                     scale={15}>*/}
+            {/*  <RandomizedLight intensity={Math.PI}*/}
+            {/*                   amount={10}*/}
+            {/*                   radius={7}*/}
+            {/*                   ambient={0.5}*/}
+            {/*                   position={[-10, 10, 10]}*/}
+            {/*                   bias={0.001}/>*/}
+            {/*</AccumulativeShadows>*/}
           </group>
         </CameraRig>
       </ScrollControls>
@@ -57,13 +64,33 @@ function App() {
 }
 
 function CameraRig({children}) {
-  const group = useRef()
-  useFrame((state, delta) => {
-    // @ts-ignore
-    // easing.dampE(group.current.rotation, [0, -state.pointer.x / 4, 0], 0.25, delta)
-  })
+  const groupRef = useRef<THREE.Group>();
+  const tlRef = useRef<gsap.core.Timeline>();
+
+  const scroll = useScroll();
+
+  useFrame(() => {
+    const seek = scroll.offset * tlRef.current!.duration();
+    tlRef.current?.seek(seek);
+  });
+
+  useLayoutEffect(() => {
+    console.log('useLayoutEffect', {
+      pos:groupRef.current!.position,
+      y: VIEWPORT_HEIGHT * (SECTIONS_COUNT - 1),
+    })
+    tlRef.current = gsap.timeline();
+    tlRef.current.to(groupRef.current!.position, {
+      y: VIEWPORT_HEIGHT * (SECTIONS_COUNT - 1),
+      duration: 2,
+    },0)
+  }, []);
+  // useFrame((state, delta) => {
+  //   // @ts-ignore
+  //   // easing.dampE(group.current.rotation, [0, -state.pointer.x / 4, 0], 0.25, delta)
+  // })
   // @ts-ignore
-  return <group ref={group}>{children}</group>
+  return <group ref={groupRef}>{children}</group>
 }
 
 
