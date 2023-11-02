@@ -11,8 +11,9 @@ import {
   StatsGl
 } from "@react-three/drei";
 import {Clocks} from "./Clocks.jsx";
-import {createContext} from "react";
+import {createContext, useState} from "react";
 import {useControls} from "leva";
+import Interface from "./Interface.jsx";
 
 export const rootContext = createContext({
   helpers: false,
@@ -27,8 +28,10 @@ function App() {
       render: (get) => get('helpers'),
     },
   });
+  const [stage, setStage] = useState('start');
 
-  return (
+  return <>
+    {/*<Interface onBtnClick={stageName => setStage(stageName)}/>*/}
     <Canvas shadows>
       <directionalLight position={[0, 7, 5]} intensity={5}/>
       {controls.helpers && <>
@@ -45,7 +48,7 @@ function App() {
       <ScrollControls pages={3}>
         <group position={[0, 0, 0]}>
           <rootContext.Provider value={controls}>
-            <Clocks/>
+            <Clocks stage={stage}/>
           </rootContext.Provider>
         </group>
       </ScrollControls>
@@ -56,7 +59,7 @@ function App() {
         <Lightformer intensity={60} rotation-y={Math.PI / 2} position={[10, 10, 10]} scale={[20, 1, 1]}/>
       </Environment>
     </Canvas>
-  )
+  </>
 }
 
 

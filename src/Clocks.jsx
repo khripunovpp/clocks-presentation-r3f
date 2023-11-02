@@ -6,7 +6,7 @@ import {useFrame} from "@react-three/fiber";
 import RotationOrigin from "./RotationOrigin.jsx";
 import {rootContext} from "./App.jsx";
 
-export function Clocks() {
+export function Clocks({stage}) {
   const {nodes, materials} = useGLTF("./models/clocks.gltf");
   const context = useContext(rootContext);
   const groupRef = useRef();
@@ -22,10 +22,11 @@ export function Clocks() {
     tlRef.current?.seek(seek);
   });
 
+
   useLayoutEffect(() => {
     tlRef.current = gsap.timeline();
 
-    tlRef.current.addLabel('start', 0);
+    tlRef.current.add('start');
     tlRef.current.from(groupRef.current?.rotation, {
       duration: 2,
       y: Math.PI / 2,
@@ -33,7 +34,7 @@ export function Clocks() {
 
     const scaleMultiplier = 2;
 
-    tlRef.current.addLabel('stage1');
+    tlRef.current.add('stage1');
     tlRef.current.to(groupRef.current?.scale, {
       duration: 2,
       y: groupRef.current?.scale.y * scaleMultiplier,
@@ -68,10 +69,6 @@ export function Clocks() {
       y: -Math.PI,
     });
   }, []);
-
-  const onClickStage = stage => {
-    tlRef.current?.seek(stage);
-  }
 
   return (
     <group dispose={null} ref={groupRef}>
