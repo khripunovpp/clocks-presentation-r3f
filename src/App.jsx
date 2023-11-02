@@ -10,7 +10,7 @@ import {
   Stats,
   StatsGl
 } from "@react-three/drei";
-import {Clocks} from "./Clocks.tsx";
+import {Clocks} from "./Clocks.jsx";
 import {createContext} from "react";
 import {useControls} from "leva";
 

@@ -3,25 +3,22 @@ import * as THREE from "three";
 import {useContext, useLayoutEffect, useRef} from "react";
 import gsap from "gsap";
 import {useFrame} from "@react-three/fiber";
-import {ThreeElements} from "@react-three/fiber/dist/declarations/src/three-types";
-import RotationOrigin from "./RotationOrigin.tsx";
-import {rootContext} from "./App.tsx";
+import RotationOrigin from "./RotationOrigin.jsx";
+import {rootContext} from "./App.jsx";
 
-// @ts-ignore
 export function Clocks() {
-  // @ts-ignore
   const {nodes, materials} = useGLTF("./models/clocks.gltf");
   const context = useContext(rootContext);
-  const groupRef = useRef<ThreeElements["group"]>();
-  const standRef = useRef<ThreeElements["group"]>();
-  const clocksRef = useRef<ThreeElements["group"]>();
-  const tlRef = useRef<gsap.core.Timeline>();
+  const groupRef = useRef();
+  const standRef = useRef();
+  const clocksRef = useRef();
+  const tlRef = useRef();
   const scroll = useScroll();
 
   useHelper(context.helpers ? groupRef : undefined, THREE.BoxHelper, 'cyan');
 
   useFrame(() => {
-    const seek = scroll.offset * tlRef.current!.duration();
+    const seek = scroll.offset * tlRef.current.duration();
     tlRef.current?.seek(seek);
   });
 
@@ -29,7 +26,7 @@ export function Clocks() {
     tlRef.current = gsap.timeline();
 
     tlRef.current.addLabel('start', 0);
-    tlRef.current.from(groupRef.current?.rotation!, {
+    tlRef.current.from(groupRef.current?.rotation, {
       duration: 2,
       y: Math.PI / 2,
     });
@@ -37,11 +34,11 @@ export function Clocks() {
     const scaleMultiplier = 2;
 
     tlRef.current.addLabel('stage1');
-    tlRef.current.to(groupRef.current?.scale!, {
+    tlRef.current.to(groupRef.current?.scale, {
       duration: 2,
-      y: groupRef.current?.scale!.y * scaleMultiplier,
-      x: groupRef.current?.scale!.x * scaleMultiplier,
-      z: groupRef.current?.scale!.z * scaleMultiplier,
+      y: groupRef.current?.scale.y * scaleMultiplier,
+      x: groupRef.current?.scale.x * scaleMultiplier,
+      z: groupRef.current?.scale.z * scaleMultiplier,
     }, '-=2');
 
     tlRef.current.to(groupRef.current?.rotation, {
@@ -204,9 +201,7 @@ export function Clocks() {
   );
 }
 
-function BaseMaterial({color}: {
-  color?: string
-}) {
+function BaseMaterial({color}) {
 
   const context = useContext(rootContext);
   return <meshStandardMaterial color={color ?? "#ffffff"}
