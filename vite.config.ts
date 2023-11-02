@@ -8,4 +8,8 @@ export default defineConfig({
     glsl(),
     react(),
   ],
+  build:{
+    outDir: 'docs',
+  },
+  base: './',
 })

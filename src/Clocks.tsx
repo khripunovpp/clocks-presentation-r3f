@@ -28,18 +28,20 @@ export function Clocks() {
   useLayoutEffect(() => {
     tlRef.current = gsap.timeline();
 
-    tlRef.current.from(groupRef.current?.rotation, {
+    tlRef.current.addLabel('start', 0);
+    tlRef.current.from(groupRef.current?.rotation!, {
       duration: 2,
       y: Math.PI / 2,
-    }, 0);
+    });
 
     const scaleMultiplier = 2;
 
-    tlRef.current.to(groupRef.current?.scale, {
+    tlRef.current.addLabel('stage1');
+    tlRef.current.to(groupRef.current?.scale!, {
       duration: 2,
-      y: groupRef.current?.scale.y * scaleMultiplier,
-      x: groupRef.current?.scale.x * scaleMultiplier,
-      z: groupRef.current?.scale.z * scaleMultiplier,
+      y: groupRef.current?.scale!.y * scaleMultiplier,
+      x: groupRef.current?.scale!.x * scaleMultiplier,
+      z: groupRef.current?.scale!.z * scaleMultiplier,
     }, '-=2');
 
     tlRef.current.to(groupRef.current?.rotation, {
@@ -69,6 +71,10 @@ export function Clocks() {
       y: -Math.PI,
     });
   }, []);
+
+  const onClickStage = stage => {
+    tlRef.current?.seek(stage);
+  }
 
   return (
     <group dispose={null} ref={groupRef}>
@@ -205,7 +211,7 @@ function BaseMaterial({color}: {
   const context = useContext(rootContext);
   return <meshStandardMaterial color={color ?? "#ffffff"}
                                side={THREE.DoubleSide}
-                               wireframe={context.helpers}
+                               wireframe={context.wireframe}
                                roughness={0.5}/>
 }
 

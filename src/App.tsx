@@ -16,11 +16,16 @@ import {useControls} from "leva";
 
 export const rootContext = createContext({
   helpers: false,
+  wireframe: false,
 });
 
 function App() {
-  const controls = useControls('General', {
+  const controls = useControls({
     helpers: false,
+    wireframe: {
+      value: false,
+      render: (get) => get('helpers'),
+    },
   });
 
   return (
