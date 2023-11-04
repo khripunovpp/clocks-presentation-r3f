@@ -18,57 +18,57 @@ export function Clocks({stage}) {
   useHelper(context.helpers ? groupRef : undefined, THREE.BoxHelper, 'cyan');
 
   useFrame(() => {
-    const seek = scroll.offset * tlRef.current.duration();
-    tlRef.current?.seek(seek);
+    // const seek = scroll.offset * tlRef.current.duration();
+    // tlRef.current?.seek(seek);
   });
 
 
-  useLayoutEffect(() => {
-    tlRef.current = gsap.timeline();
-
-    tlRef.current.add('start');
-    tlRef.current.from(groupRef.current?.rotation, {
-      duration: 2,
-      y: Math.PI / 2,
-    });
-
-    const scaleMultiplier = 2;
-
-    tlRef.current.add('stage1');
-    tlRef.current.to(groupRef.current?.scale, {
-      duration: 2,
-      y: groupRef.current?.scale.y * scaleMultiplier,
-      x: groupRef.current?.scale.x * scaleMultiplier,
-      z: groupRef.current?.scale.z * scaleMultiplier,
-    }, '-=2');
-
-    tlRef.current.to(groupRef.current?.rotation, {
-      duration: 2,
-      y: -Math.PI / 9,
-    });
-
-    tlRef.current.to(groupRef.current?.scale, {
-      duration: 2,
-      y: groupRef.current?.scale.y * 1.3,
-      x: groupRef.current?.scale.x * 1.3,
-      z: groupRef.current?.scale.z * 1.3,
-    }, '-=2');
-
-    tlRef.current.to(groupRef.current?.rotation, {
-      duration: 2,
-      y: -Math.PI / 2,
-    });
-
-    tlRef.current.to(groupRef.current?.rotation, {
-      duration: 2,
-      y: -Math.PI / 2,
-    });
-
-    tlRef.current.to(groupRef.current?.rotation, {
-      duration: 2,
-      y: -Math.PI,
-    });
-  }, []);
+  // useLayoutEffect(() => {
+  //   tlRef.current = gsap.timeline();
+  //
+  //   tlRef.current.add('start');
+  //   tlRef.current.from(groupRef.current?.rotation, {
+  //     duration: 2,
+  //     y: Math.PI / 2,
+  //   });
+  //
+  //   const scaleMultiplier = 2;
+  //
+  //   tlRef.current.add('stage1');
+  //   tlRef.current.to(groupRef.current?.scale, {
+  //     duration: 2,
+  //     y: groupRef.current?.scale.y * scaleMultiplier,
+  //     x: groupRef.current?.scale.x * scaleMultiplier,
+  //     z: groupRef.current?.scale.z * scaleMultiplier,
+  //   }, '-=2');
+  //
+  //   tlRef.current.to(groupRef.current?.rotation, {
+  //     duration: 2,
+  //     y: -Math.PI / 9,
+  //   });
+  //
+  //   tlRef.current.to(groupRef.current?.scale, {
+  //     duration: 2,
+  //     y: groupRef.current?.scale.y * 1.3,
+  //     x: groupRef.current?.scale.x * 1.3,
+  //     z: groupRef.current?.scale.z * 1.3,
+  //   }, '-=2');
+  //
+  //   tlRef.current.to(groupRef.current?.rotation, {
+  //     duration: 2,
+  //     y: -Math.PI / 2,
+  //   });
+  //
+  //   tlRef.current.to(groupRef.current?.rotation, {
+  //     duration: 2,
+  //     y: -Math.PI / 2,
+  //   });
+  //
+  //   tlRef.current.to(groupRef.current?.rotation, {
+  //     duration: 2,
+  //     y: -Math.PI,
+  //   });
+  // }, []);
 
   return (
     <group dispose={null} ref={groupRef}>
