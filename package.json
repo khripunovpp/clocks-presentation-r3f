@@ -12,7 +12,11 @@
   "dependencies": {
     "@react-three/drei": "9.83.9",
     "@react-three/fiber": "^8.14.1",
+    "@theatre/core": "^0.7.0",
+    "@theatre/r3f": "^0.7.0",
+    "@theatre/studio": "^0.7.0",
     "gsap": "^3.12.2",
+    "jotai": "^2.5.0",
     "maath": "^0.10.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

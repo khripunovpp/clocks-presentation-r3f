@@ -4,7 +4,6 @@ import {
   Environment,
   GizmoHelper,
   GizmoViewport,
-  Lightformer,
   OrbitControls,
   ScrollControls,
   Stats,
@@ -13,7 +12,6 @@ import {
 import {Clocks} from "./Clocks.jsx";
 import {createContext, useState} from "react";
 import {useControls} from "leva";
-import Interface from "./Interface.jsx";
 
 export const rootContext = createContext({
   helpers: false,
@@ -53,11 +51,13 @@ function App() {
         </group>
       </ScrollControls>
 
-      <Environment background>
-        <Lightformer intensity={40} color={'#ffffff'} rotation-y={Math.PI / 2} position={[5, 1, 1]} scale={[20, 1, 1]}/>
-        <Lightformer intensity={10} rotation-y={Math.PI / 2} position={[-5, 4, -1]} scale={[20, 0.9, 1]}/>
-        <Lightformer intensity={60} rotation-y={Math.PI / 2} position={[10, 10, 10]} scale={[20, 1, 1]}/>
-      </Environment>
+      {/*<Environment background>*/}
+      {/*  <Lightformer intensity={40} color={'#ffffff'} rotation-y={Math.PI / 2} position={[5, 1, 1]} scale={[20, 1, 1]}/>*/}
+      {/*  <Lightformer intensity={10} rotation-y={Math.PI / 2} position={[-5, 4, -1]} scale={[20, 0.9, 1]}/>*/}
+      {/*  <Lightformer intensity={60} rotation-y={Math.PI / 2} position={[10, 10, 10]} scale={[20, 1, 1]}/>*/}
+      {/*</Environment>*/}
+
+      <Environment preset="studio"/>
     </Canvas>
   </>
 }
