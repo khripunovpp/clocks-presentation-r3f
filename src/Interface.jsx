@@ -1,9 +1,12 @@
 import styled from "styled-components";
+import {useAtom} from "jotai";
+import {stageAtom} from "./App.jsx";
+import {stages} from "./conts.js";
 
 const Container = styled.section`
   position: fixed;
   z-index: 1;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
   width: 100%;
   display: flex;
@@ -37,15 +40,19 @@ const Button = styled.button`
     background-color: #000000;
     color: #ffffff;
   }
+  &.active {
+    background-color: #000000;
+    color: #ffffff;
+    pointer-events: none;
+  }
 `;
 
-export default function Interface({
-                                    onBtnClick
-                                  }) {
+export default function Interface() {
+  const [stage, setStage] = useAtom(stageAtom);
+  const stagesList = Object.entries(stages).map(([key, value]) => <Button onClick={() => setStage(key)} className={stage === key ? 'active' : ''} key={key}>{value}</Button>);
   return <Container>
     <NavigationControls>
-      <Button onClick={() => onBtnClick('start')}>Start</Button>
-      <Button onClick={() => onBtnClick('stage1')}>Stage 1</Button>
+      {stagesList}
     </NavigationControls>
   </Container>
 }

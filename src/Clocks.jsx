@@ -1,12 +1,14 @@
 import {useGLTF, useHelper, useScroll} from "@react-three/drei";
 import * as THREE from "three";
-import {useContext, useLayoutEffect, useRef} from "react";
+import {useContext, useEffect, useLayoutEffect, useRef} from "react";
 import gsap from "gsap";
 import {useFrame} from "@react-three/fiber";
 import RotationOrigin from "./RotationOrigin.jsx";
-import {rootContext} from "./App.jsx";
+import {rootContext, stageAtom} from "./App.jsx";
+import {useAtom} from "jotai";
+import {stageKeys} from "./conts.js";
 
-export function Clocks({stage}) {
+export function Clocks() {
   const {nodes, materials} = useGLTF("./models/clocks.gltf");
   const context = useContext(rootContext);
   const groupRef = useRef();
@@ -15,31 +17,48 @@ export function Clocks({stage}) {
   const tlRef = useRef();
   const scroll = useScroll();
 
+  const [stage, setStage] = useAtom(stageAtom);
+  const scrollToSection = (sectionLabel) => {
+    const labelTime = tlRef.current.labels[sectionLabel];
+    const nextScrollOffset = labelTime / tlRef.current.duration();
+    scroll.el.scrollTop = nextScrollOffset * scroll.pages * scroll.el.clientHeight;
+    scroll.scroll.current = nextScrollOffset;
+  };
+
   useHelper(context.helpers ? groupRef : undefined, THREE.BoxHelper, 'cyan');
 
   useFrame(() => {
-    const seek = scroll.offset * tlRef.current.duration();
-    tlRef.current?.seek(seek);
+    const newAnimationPosition = scroll.offset * tlRef.current.duration();
+    tlRef.current?.seek(newAnimationPosition);
   });
 
+  useEffect(() => {
+    scrollToSection(stage);
+  }, [stage]);
 
   useLayoutEffect(() => {
     tlRef.current = gsap.timeline();
 
-    tlRef.current.add('start');
+    tlRef.current.add(stageKeys.start);
     tlRef.current.from(groupRef.current?.rotation, {
       duration: 2,
       y: Math.PI / 2,
+      onComplete: () => {
+        // setStage(stageKeys.start);
+      },
     });
 
     const scaleMultiplier = 2;
 
-    tlRef.current.add('stage1');
+    tlRef.current.add(stageKeys.front);
     tlRef.current.to(groupRef.current?.scale, {
       duration: 2,
       y: groupRef.current?.scale.y * scaleMultiplier,
       x: groupRef.current?.scale.x * scaleMultiplier,
       z: groupRef.current?.scale.z * scaleMultiplier,
+      onComplete: () => {
+        // setStage(stageKeys.front);
+      },
     }, '-=2');
 
     tlRef.current.to(groupRef.current?.rotation, {
@@ -59,15 +78,23 @@ export function Clocks({stage}) {
       y: -Math.PI / 2,
     });
 
+    tlRef.current.add(stageKeys.rightSide);
     tlRef.current.to(groupRef.current?.rotation, {
       duration: 2,
       y: -Math.PI / 2,
+      onComplete: () => {
+        // setStage(stageKeys.rightSide);
+      }
     });
 
     tlRef.current.to(groupRef.current?.rotation, {
       duration: 2,
       y: -Math.PI,
+      onComplete: () => {
+        // setStage(stageKeys.back);
+      }
     });
+    tlRef.current.add(stageKeys.back);
   }, []);
 
   return (

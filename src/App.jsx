@@ -1,10 +1,20 @@
 import {Canvas} from "@react-three/fiber";
 import './App.scss';
-import {Environment, GizmoHelper, GizmoViewport, OrbitControls, ScrollControls, StatsGl} from "@react-three/drei";
+import {
+  Environment,
+  GizmoHelper,
+  GizmoViewport,
+  OrbitControls,
+  ScrollControls,
+  Stats,
+  StatsGl
+} from "@react-three/drei";
 import {Clocks} from "./Clocks.jsx";
-import {createContext, useState} from "react";
+import React, {createContext, useState} from "react";
 import {useControls} from "leva";
-
+import Interface from "./Interface.jsx";
+import { atom, useAtom } from 'jotai'
+export const stageAtom = atom('start');
 export const rootContext = createContext({
   helpers: false,
   wireframe: false,
@@ -18,10 +28,8 @@ function App() {
       render: (get) => get('helpers'),
     },
   });
-  const [stage, setStage] = useState('start');
-
   return <>
-    {/*<Interface onBtnClick={stageName => setStage(stageName)}/>*/}
+    <Interface/>
     <Canvas shadows gl={{
       preserveDrawingBuffer: true,
     }}>
@@ -37,14 +45,15 @@ function App() {
         <OrbitControls maxPolarAngle={Math.PI / 2} enableZoom={controls.helpers} makeDefault/>
       </>}
       <ScrollControls pages={10} damping={.4}>
-        <Scene/>
+        <rootContext.Provider value={controls}>
+          <Scene/>
+        </rootContext.Provider>
       </ScrollControls>
     </Canvas>
   </>
 }
 
 function Scene() {
-
   return <>
     <directionalLight position={[0, 7, 5]} intensity={5} theatreKey={'light'}/>
 
