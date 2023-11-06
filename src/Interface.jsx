@@ -6,9 +6,11 @@ import {stages} from "./conts.js";
 const Container = styled.section`
   position: fixed;
   z-index: 1;
-  bottom: 20px;
-  left: 0;
+  max-width: 70%;
   width: 100%;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   justify-items: center;
@@ -19,10 +21,13 @@ const NavigationControls = styled.div`
   justify-content: center;
   justify-items: center;
   align-items: center;
-  background-color: #f7f7f7;
+  background-color: rgba(#f7f7f7, 0.25);
   padding: 25px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(100px);
   border-radius: 55px;
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 `;
 
 const Button = styled.button`
@@ -36,14 +41,23 @@ const Button = styled.button`
   font-weight: bold;
   color: #000000;
   transition: all 0.25s ease-in-out;
+  white-space: nowrap;
+
   &:hover {
     background-color: #000000;
     color: #ffffff;
   }
+
   &.active {
     background-color: #000000;
     color: #ffffff;
     pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 5px 15px;
+    margin: 0 5px;
   }
 `;
 

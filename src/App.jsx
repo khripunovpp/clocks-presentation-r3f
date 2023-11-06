@@ -1,19 +1,25 @@
-import {Canvas} from "@react-three/fiber";
+import {Canvas, useThree} from "@react-three/fiber";
 import './App.scss';
 import {
   Environment,
   GizmoHelper,
   GizmoViewport,
   OrbitControls,
+  PivotControls,
   ScrollControls,
   Stats,
   StatsGl
 } from "@react-three/drei";
 import {Clocks} from "./Clocks.jsx";
-import React, {createContext, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {useControls} from "leva";
 import Interface from "./Interface.jsx";
-import { atom, useAtom } from 'jotai'
+import {atom} from 'jotai'
+
+const MOBILE_CAMERA_ZOOM = 8;
+const DESKTOP_CAMERA_ZOOM = 5;
+const calculateCameraZoom = () => window.innerWidth < 768 ? MOBILE_CAMERA_ZOOM : DESKTOP_CAMERA_ZOOM;
+
 export const stageAtom = atom('start');
 export const rootContext = createContext({
   helpers: false,
@@ -21,10 +27,19 @@ export const rootContext = createContext({
 });
 
 function App() {
+
   const controls = useControls({
     helpers: false,
     wireframe: {
       value: false,
+      render: (get) => get('helpers'),
+    },
+    body: {
+      value: true,
+      render: (get) => get('helpers'),
+    },
+    screen: {
+      value: true,
       render: (get) => get('helpers'),
     },
   });
@@ -33,7 +48,6 @@ function App() {
     <Canvas shadows gl={{
       preserveDrawingBuffer: true,
     }}>
-
       {controls.helpers && <>
         <gridHelper/>
         <gridHelper rotation-x={Math.PI / 2} position-y={0}/>
@@ -54,13 +68,31 @@ function App() {
 }
 
 function Scene() {
+  const context = useContext(rootContext);
+  const [zZoom, setZZoom] = useState(calculateCameraZoom());
+
+  useThree(({camera}) => {
+    camera.position.z = zZoom;
+  });
+
+  useEffect(() => {
+    const resize = () => {
+      setZZoom(calculateCameraZoom());
+    }
+    window.addEventListener('resize', resize)
+
+    return () => {
+      window.removeEventListener('resize', resize)
+    }
+  }, []);
+
   return <>
     <directionalLight position={[0, 7, 5]} intensity={5} theatreKey={'light'}/>
 
     <group position={[0, 0, 0]} theatreKey={'Clocks'}>
-      <Clocks/>
+      {context.helpers ? <PivotControls><Clocks/></PivotControls> : <Clocks/>}
     </group>
-    <Environment preset="studio"/>
+    <Environment preset="city"/>
 
     {/*<Environment background>*/}
     {/*  <Lightformer intensity={40} color={'#ffffff'} rotation-y={Math.PI / 2} position={[5, 1, 1]} scale={[20, 1, 1]}/>*/}

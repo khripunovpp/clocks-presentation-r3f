@@ -10,7 +10,11 @@ html, body, #root {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #f1f1f1;
+  //background: linear-gradient(#092F2F,#D3845A,#D4DDDA,#cc381a);
+
+  background-size: 100% 100%;
+  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-image: radial-gradient(49% 81% at 45% 47%, #092F2F85 0%, #073AFF00 99%), radial-gradient(113% 91% at 17% -2%, #D3845A 1%, #FF000000 99%), radial-gradient(142% 91% at 83% 7%, #092F2F 1%, #FF000000 99%), radial-gradient(142% 91% at -6% 74%, #cc381a 1%, #FF000000 99%), radial-gradient(142% 91% at 111% 84%, #D3845A 0%, #092F2F 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
