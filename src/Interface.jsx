@@ -21,7 +21,7 @@ const NavigationControls = styled.div`
   justify-content: center;
   justify-items: center;
   align-items: center;
-  background-color: rgba(#f7f7f7, 0.25);
+  background-color: #ffffff0a;
   padding: 25px;
   backdrop-filter: blur(100px);
   border-radius: 55px;
@@ -61,12 +61,27 @@ const Button = styled.button`
   }
 `;
 
+const Picture = styled.img`
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  width: 150px;
+  @media (max-width: 768px) {
+    width: 100px;
+  }
+`;
+
 export default function Interface() {
   const [stage, setStage] = useAtom(stageAtom);
-  const stagesList = Object.entries(stages).map(([key, value]) => <Button onClick={() => setStage(key)} className={stage === key ? 'active' : ''} key={key}>{value}</Button>);
-  return <Container>
-    <NavigationControls>
-      {stagesList}
-    </NavigationControls>
-  </Container>
+  const stagesList = Object.entries(stages).map(([key, value]) => <Button onClick={() => setStage(key)}
+                                                                          className={stage === key ? 'active' : ''} key={key}>{value}</Button>);
+  return <>
+    <Picture src="./img/sample.jpg" alt="logo"/>
+    <Container>
+      <NavigationControls>
+        {stagesList}
+      </NavigationControls>
+    </Container>
+  </>
 }
